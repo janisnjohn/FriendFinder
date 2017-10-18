@@ -155,11 +155,14 @@
     // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api
     // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
     // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
-
+var total=0;
+var newPerson ={};
+var comp1;
+var comp2;
     $("#submit").on("click", function(event) {
       event.preventDefault();
     var score =[];
-    var total;
+
 	var ans1 = $("#quest1").val();
 	score.push(parseInt(ans1));
 	console.log("answer 1 " + ans1);
@@ -183,12 +186,15 @@
 	var ans10 =$("#quest10").val();
 	score.push(parseInt(ans10));
 	console.log("Score " + score);
-
+	sum = parseInt(ans1) + parseInt(ans2)+ parseInt(ans3) +parseInt(ans4) + parseInt(ans5)+ parseInt(ans6) + parseInt(ans7) + parseInt(ans8)+ parseInt(ans9) + parseInt(ans10);
+	total =sum;
+	console.log(total);
       // Here we grab the form elements
-      var newPerson = {
-        Name: $("#name").val().trim(),
-        Photo: $("#photo").val().trim(),
-        Score: score
+      newPerson = {
+        name: $("#name").val().trim(),
+        photo: $("#photo").val().trim(),
+        score: score,
+        total: total
       };
 
       console.log(newPerson);
@@ -196,13 +202,65 @@
       // This line is the magic. It"s very similar to the standard ajax function we used.
       // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
       // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
-      // depending on if a tables is available or not.
+
+      $.post("/api/friends", newPerson,
+        function(data) {
+        // var result;
+        // var newSum = score[0] + score[1] +score[2] + score[3] + score[4] + score[5] + score[6] + score[7] +score[8] + score[9];
+        // console.log(newSum);
+        // var sum=0;
+        // var singleScore =0;
+        // var comp1;
+        // var comp2;
+        if (data) {
+            alert("posted to the friends array");
+       //    for (var i=0; i<data.length-1; i++) {
+       //   //append results to difference var
+       //   comp1 =Math.abs(newSum - data[i].total);
+       //   if(comp2 === "") {
+       //   	comp1 = comp2;
+       //   }
+       //   //check to see which comparison is closest to zero.
+       //   else if (comp1 < comp2) {
+       //   	comp1 = comp2;
+       //   }
+       //   else if {
+       //   	comp1 = Math.abs(newSum -data[i].total);
+       //   }
+     		// console.log("name: " + data[i].name + "total: " + data[i].total);
+     		// }
+        }
+          // notify user that there was an error if it doesn't get posted.
+          else {
+            alert("error did not get posted");
+          }
+
+          // Clear the form when submitting
+          
+	          $("#name").val("");
+          $("#photo").val("");
+          $("#quest1").val("Select an Option");
+          $("#quest2").val("Select an Option");
+          $("#quest3").val("Select an Option");
+          $("#quest4").val("Select an Option");
+          $("#quest5").val("Select an Option");
+          $("#quest6").val("Select an Option");
+          $("#quest7").val("Select an Option");
+          $("#quest8").val("Select an Option");
+          $("#quest9").val("Select an Option");
+          $("#quest10").val("Select an Option"); 
+        })
+
+              // depending on if a tables is available or not.
 function results(){
+          // Clear the form when submitting
+
+};
 	var currentURL = window.location.origin;
-	var comparison;
 	$.ajax({ url: currentURL + "/api/friends", method: "GET"})
 	.done(function(friends){
 		      // Here we are logging the URL so we have access to it for troubleshooting
+
         console.log("------------------------------------");
         console.log("URL: " + currentURL + "/api/friends");
         console.log("------------------------------------");
@@ -211,49 +269,12 @@ function results(){
 
         for (var i=0; i<friends.length; i++) {
         	// calculate all the scores for the people in the array.
-        	console.log("for loop" + friends[i].score);
+        	console.log("name: " + friends[i].name +"Total: " + friends[i].total);
+       	comp1 =Math.abs(newPerson.total - friends[i].total);
+       	console.log("comp1: "+ comp1);
         }
 
-	})
-
-
-}
-      $.post("/api/friends", newPerson,
-        function(data) {
-        var result;
-        var newSum = score[0] + score[1] +score[2] + score[3] + score[4] + score[5] + score[6] + score[7] +score[8] + score[9];
-        console.log(newSum);
-        var sum;
-          // If a table is available... tell user they are booked.
-          if (data) {
-            alert("posted to the friends array");
-          for (var i=0; i<data.length-1; i++) {
-          	singleScore = data[i].score;
-          	sum += singleScore;
-          	console.log("sum: " +sum);
-          }
-
-          }
-
-          // notify user that there was an error if it doesn't get posted.
-          else {
-            alert("error did not get posted");
-          }
-          // Clear the form when submitting
-          $("#name").val("");
-          $("#photo").val("");
-          $("#quest1").empty();
-          $("#quest2").empty();
-          $("#quest3").empty();
-          $("#quest4").empty();
-          $("#quest5").empty();
-          $("#quest6").empty();
-          $("#quest7").empty();
-          $("#quest8").empty();
-          $("#quest9").empty();
-          $("#quest9").empty(); 
-        });
-
-    });
+	});
+});
 
 </script>
