@@ -7,6 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
   	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
   	<script type="text/javascript"></script>
@@ -133,7 +134,7 @@
 				<option value="5">5 (Strongly Agree)</option>
 			</select>
 			<hr>
-		<button type="submit" class="btn btn-primary btn-lg btn-block" id="submit">
+		<button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" data-toggle="modal" data-target="#resultsModal">
 			<i class="fa fa-check-circle"></i>Submit</button>
 			<hr>
 		<div></div>
@@ -146,6 +147,26 @@
 			<a href="https://janisnjohn.github.io/FriendFinder/">GitHub Repo</a>
 		</p>
 	</footer>
+<!-- modal for displaying match. -->>
+<div id="resultsModal" class="modal fade" role="dialog" style="display: none;">
+	<div class ="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h2 class="modal-title">
+					<strong>Best Match</strong></h2>
+			</div>
+			<div class="modal-body">
+				<h2 id="matchName"></h2>
+				<img id="matchImg">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 </body>
 </html>
 <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
@@ -157,8 +178,18 @@
     // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
 var total=0;
 var newPerson ={};
-var comp1;
-var comp2;
+var comp1=0;
+var comp2=0;
+// $('#submit').on('show.bs.modal', function (event) {
+//   var button = $(event.relatedTarget) // Button that triggered the modal
+//   var recipient = button.data('whatever') // Extract info from data-* attributes
+//   // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+//   // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+//   var modal = $(this)
+//   modal.find('.modal-title').text('New message to ' + recipient)
+//   modal.find('.modal-body input').val(recipient)
+// })
+
     $("#submit").on("click", function(event) {
       event.preventDefault();
     var score =[];
@@ -266,14 +297,33 @@ function results(){
         console.log("------------------------------------");
         console.log(friends);
         console.log("------------------------------------");
-
-        for (var i=0; i<friends.length; i++) {
+        var match;
+        for (var i=0; i<friends.length-1; i++) {
         	// calculate all the scores for the people in the array.
         	console.log("name: " + friends[i].name +"Total: " + friends[i].total);
        	comp1 =Math.abs(newPerson.total - friends[i].total);
-       	console.log("comp1: "+ comp1);
-        }
+       	if(comp2 ===0) {
+       		comp2 = comp1;
+       		console.log("first comp1:  " + comp1);
+       		console.log("second comp2: " + comp2);
+       		$("#matchName").html(friends[i].name);
+       		$("#matchImg").attr("src", friends[i].photo);
+       	// }
+       	// if (comp1  <= comp2){
+       	// 	match=comp1;
+       	// 	console.log("first match: " + macth);
+       	// 	comp1 =Math.abs(newPerson.total - friends[i].total);
+       	// 	if (comp1 <= match);
+       	// 	match =comp1;
+       	// console.log("first matchcomp1: " + comp1);
+       	// } else if (comp2 < comp1){
+       	// 	match = comp2;
+       	}else{
 
+       	console.log("comp2 is not zero");
+       	//console.log("match: "+ match);
+        }
+    }
 	});
 });
 
