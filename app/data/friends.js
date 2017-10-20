@@ -7,14 +7,14 @@
 
 var friendsArray = [
   {
-    name: "Ahmed",
-    photo: "https://pbs.twimg.com/profile_images/706512317165510657/ne8Uf5ot.jpg",
+    name: "Jason",
+    photo: "https://images.contentful.com/0pnkpx3hfneg/1UTu5LX1YUWaoWKeqass8e/4cf9e1eebbf60a2359590b1ca8314c42/Luke-Downey.jpg",
     score: [5,1,4,4,5,1,2,5,4,1],
     total: 32
   },
   {
     name: "John",
-    photo: "https://grist.files.wordpress.com/2017/03/seanawatkins.jpg?w=640",
+    photo: "http://s3-us-west-1.amazonaws.com/com.sfheat.craft/people-portrait-images/_squareCenterCenter300Transform/John_Elder_shoulder.jpg",
     score: [3,3,4,4,5,3,5,5,4,1],
     total: 37
   },
@@ -26,7 +26,7 @@ var friendsArray = [
   },
   {
     name: "Steve",
-    photo: "https://qzprod.files.wordpress.com/2016/02/h_50472570.jpg?quality=80&strip=all",
+    photo: "http://grinkecreative.com/wp-content/uploads/2014/04/DSF5867sm-300x300.jpg",
     score: [4,3,1,4,5,3,1,5,4,1],
     total: 31
   }
