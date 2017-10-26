@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>FriendFinder</title>
-    <!-- Latest compiled and minified CSS & JS -->
+	<title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Font Awesome Glyphicons -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Waiting+for+the+Sunrise' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+  	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  	<script type="text/javascript"></script>
+	<style type="text/css"></style>
 
 </head>
 <body>
 	<div class = "container">
-		<form>
 		<h2>Survey Questions</h2>
 		<hr>
 		<h3><strong>About You</strong></h3>
@@ -134,10 +134,10 @@
 				<option value="5">5 (Strongly Agree)</option>
 			</select>
 			<hr>
-		<button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" aria-hidden="true">
+		<button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" data-toggle="modal" data-target="#resultsModal">
 			<i class="fa fa-check-circle"></i>Submit</button>
 			<hr>
-		</form>
+		<div></div>
 	</div>
 	<footer class = "footer">
 	<div class="container">
@@ -148,7 +148,7 @@
 		</p>
 	</footer>
 <!-- modal for displaying match. -->>
-<div id="resultsModal" class="modal fade" role="dialog">
+<div id="resultsModal" class="modal fade" role="dialog" style="display: none;">
 	<div class ="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -171,37 +171,18 @@
 </html>
 <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
 <script type="text/javascript">
-$( document ).ready(function() {
-    console.log( "ready!" );
-$("#submit").on("click", function(event) {
-        // Form validation
-        function validateForm() {
-            var isValid = true;
-            $('.form-control').each(function() {
-                if ($(this).val() === '')
-                    isValid = false;
-            });
-            $('.select').each(function() {
-                if ($(this).val() === null)
-                    isValid = false
-            })
-            return isValid;
-        }
-        // If all required fields are filled
-        if (validateForm() == true) {
-            // Create scores array
 
-	console.log("before");
-	event.preventDefault();
-	console.log("after");
+
 var total=0;
 var newPerson ={};
     var score =[];
 
 	var ans1 = $("#quest1").val();
 	score.push(parseInt(ans1));
+	console.log("answer 1 " + ans1);
 	var ans2 = $("#quest2").val();
 	score.push(parseInt(ans2));
+	console.log("answer 2 " + ans2);
 	var ans3 =$("#quest3").val();
 	score.push(parseInt(ans3));
 	var ans4 =$("#quest4").val();
@@ -260,37 +241,33 @@ var newPerson ={};
           $("#quest8").val("Select an Option");
           $("#quest9").val("Select an Option");
           $("#quest10").val("Select an Option"); 
-        });
+        })
 
 	var currentURL = window.location.origin;
 	$.ajax({ url: currentURL + "/api/friends", method: "GET"})
 	.done(function(friends){
 		      // Here we are logging the URL so we have access to it for troubleshooting
-        var totalDifference =[]; 
-        var smallest=0;
-        var maxIndex;
+        var totalDifference =10000; 
+        var match;
+        var matchName;
+        var matchPhoto;
         for (var i=0; i<friends.length-1; i++) {
         	var difference =0;
-        	for (var j=0; j<friends[i].score.length; j++) {
-			difference += Math.abs(newPerson.score[j]-friends[i].score[j]);
-			console.log("newperson:" + newPerson.score[j]);
-			// console.log(newPerson.score[j], friends[i].score[j]);
-        	}
-    	    totalDifference.push(difference);
-    	    console.log("first Total Difference: " + totalDifference);    		
+        		difference = Math.abs(parseInt(newPerson.total)-parseInt(friends[i].total));
+        		console.log("Name: " +friends[i].name + "difference: " + difference);
+        		console.log("total difference: "+ totalDifference);
+	        	if (difference <= totalDifference){
+	        		totalDifference = difference;
+	        		matchName = friends[i].name;
+	        		matchPhoto = friends[i].photo;
+	        	}else {
+	        		match = totalDifference;
+	        		console.log("match: " + match);
+       				$("#matchName").text(matchName);
+					$("#matchImg").attr("src", matchPhoto);
+			}
        	} 
-       	smallest=Math.min.apply(null, totalDifference);
-       	maxIndex=totalDifference.indexOf(smallest);
-       	console.log("smallest: " + smallest, "maxIndex: " + maxIndex, "friendsindex: " + friends[maxIndex].name, "totalDifference: " + totalDifference);
-       	$("#matchName").text(friends[maxIndex].name);
-		$("#matchImg").attr("src", friends[maxIndex].photo);
-		$("#resultsModal").modal("toggle");
-
-    });
-	}else {
-            alert("Please fill out all fields before submitting!");
-        }
-        return false;
-	});
+    })
 });
+
 </script>
